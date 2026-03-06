@@ -1,5 +1,7 @@
 #ifndef PCB_H
 #define PCB_H
+#include <stdio.h>
+
 
 typedef enum {
   NEW,
@@ -20,7 +22,7 @@ typedef struct {
 } PCB;
 
 void initPCB(PCB *p, char *pid, int arrival, int burst, int priority);
-char stateToString(ProcessState state);
+const char *stateToString(ProcessState state);
 void printPCB(FILE *fp, PCB *p);
 
 #endif
