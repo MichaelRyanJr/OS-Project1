@@ -1,1 +1,2 @@
-
+Running List of AI Uses:
+1) Explaining how to use Github and how I should structure the project
