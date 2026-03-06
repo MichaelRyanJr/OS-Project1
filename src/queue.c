@@ -62,6 +62,14 @@ int getAt(Queue *q, int pos){
   return q->data[pos];
 }
 
+int isEmpty(Queue *q){
+  if(q->size == 0){
+    return 1;
+  }
+
+  return 0;
+}
+
 
 
 
