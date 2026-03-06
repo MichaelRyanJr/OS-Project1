@@ -1,4 +1,4 @@
 Running List of AI Uses:
 1) Explaining how to use Github and how I should structure the project
 2) To brush up on how to use fprintf
-3) To brush up on memory allocation
+3) To brush up on memory allocation and standard practices
