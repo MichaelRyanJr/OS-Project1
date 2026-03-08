@@ -31,10 +31,33 @@ void printTimeStep(FILE *outFile, int time, PCB processes[], int runningIndex, Q
 }
 
 
+void printGanttChart(FILE *outFile, PCB processes[], int gantt[], int ganttLength){
+  fprintf(outFile, "\nGantt Chart:\n");
+
+  for(int i = 0; i < ganttLength; i++){
+    if(gantt[i] == -1){
+      fprintf(outFile, "| IDLE ");
+    }
+    else {
+      fprintf(outFile, "| %s ", processes[gantt[i]].pid);
+    }
+  }
+
+  fprintf(outFile, "|\n");
+
+  for(int i = 0; i <= ganttLength; i++){
+    fprintf(outFile, "%d    ", i);
+  }
+  fprintf(outFile, "\n");
+}
+
+
 void runFCFS(FILE *outFile, PCB processes[], int count){
   Queue readyQueue;
   int time = 0;
   int runningIndex = -1; //-1 indicates idle
+  int gantt[1000];
+  int ganttLength = 0;
 
   initQueue(&readyQueue, count);
 
@@ -60,6 +83,10 @@ void runFCFS(FILE *outFile, PCB processes[], int count){
     if(runningIndex != -1){
       processes[runningIndex].remainingTime--;
     }
+
+    //Record running processes for gantt chart
+    gantt[ganttLength] = runningIndex;
+    ganttLength++;
     
     printTimeStep(outFile, time, processes, runningIndex, &readyQueue);
     //update process data if process has finished execution
@@ -72,6 +99,8 @@ void runFCFS(FILE *outFile, PCB processes[], int count){
     time++;
   }
 
+  printGanttChart(outFile, processes, gantt, ganttLength);
+  
   freeQueue(&readyQueue);
 }
 
