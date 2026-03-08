@@ -17,14 +17,14 @@ void printTimeStep(FILE *outFile, int time, PCB processes[], int runningIndex, Q
 
   //if runningIndex == -1, CPU idle
   if(runningIndex == -1){
-    fprintf(outFile, "RUNNING: IDLE\n");
+    fprintf(outFile, "\nRUNNING: \nIDLE\n");
   }
   else{
-    fprintf(outFile, "RUNNING:\n");
+    fprintf(outFile, "\nRUNNING:\n");
     printPCB(outFile, &processes[runningIndex]);
   }
 
-  fprintf(outFile, "READY:\n");
+  fprintf(outFile, "\nREADY:\n");
   for(int i = 0; i < readyQueue->size; i++){
     printPCB(outFile, &processes[getAt(readyQueue, i)]);
   }
