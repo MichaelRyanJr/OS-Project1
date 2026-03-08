@@ -184,7 +184,7 @@ void runSRTF(FILE *outFile, PCB processes[], int count){
         giveQueue(&readyQueue, i);
       }
     }
-    //if something is in ready queue and CPU is idle, look for new process
+    //if something is in ready queue and CPU is idle, look for new process (non preemptive selection logic)
     if(isEmpty(&readyQueue) == 0 && runningIndex == -1){
       int bestQueuePos = 0;
       int bestProcessIndex = getAt(&readyQueue, 0);
@@ -206,6 +206,37 @@ void runSRTF(FILE *outFile, PCB processes[], int count){
         processes[runningIndex].startTime = time;
       }
     }
+    //if queue not empty and something is alredy running, check if running process has SRT, if not, preempt with SRT (preemptive logic)
+    if(isEmpty(&readyQueue) == 0 && runningIndex != -1){
+      int runningRemainingTime = processes[runningIndex].remainingTime;
+      int queueSRTIndex = 0;
+      int processIndex = getAt(&readyQueue, 0);
+      int queueSRT = processes[queueSRTProcessIndex].remainingTime;
+      int currentRemainingTime;
+      //check current RT against the rest
+      for(int i = 1; i < readyQueue.size; i++){
+        processIndex = getAt(&readyQueue, i);
+        currentRemainingTime = processes[processIndex].remainingTime;
+        //check if shorter remaining time found
+        if(currentRemainingTime < queueSRT){
+          queueSRT = currentRemainingTime;
+          queueSRTIndex = i;
+        }
+      }
+      //check if shortest remaining time in queue is shorter than current process, if yes, then swap
+      if(queueSRT < runningRemainingTime){
+        processes[runningIndex].state = READY;
+        giveQueue(&readyQueue, runningIndex);
+        
+        runningIndex = takeAt(&readyQueue, queueSRTIndex);
+        processes[runningIndex].state = RUNNING;
+        //Check if this is the new processes first time running
+        if(processes[runningIndex].startTime == -1){
+          processes[runningIndex].startTime = time;
+        }
+      }
+    }
+    
     //if a process is running, decrement its remaining time
     if(runningIndex != -1){
       processes[runningIndex].remainingTime--;
