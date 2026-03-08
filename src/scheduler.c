@@ -186,7 +186,7 @@ void runSRTF(FILE *outFile, PCB processes[], int count){
     }
     //if something is in ready queue and CPU is idle, look for new process
     if(isEmpty(&readyQueue) == 0 && runningIndex == -1){
-      intBestQueuePos = 0;
+      int bestQueuePos = 0;
       int bestProcessIndex = getAt(&readyQueue, 0);
       int bestRemainingTime = processes[bestProcessIndex].remainingTime;
       //searching for shortest remaining time
