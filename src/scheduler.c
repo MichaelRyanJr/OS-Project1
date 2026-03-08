@@ -168,6 +168,67 @@ void runPriority(FILE *outFile, PCB processes[], int count){
 }
 
 
+void runSRTF(FILE *outFile, PCB processes[], int count){
+  Queue readyQueue;
+  int time = 0;
+  int runningIndex = -1; //-1 indicates idle
+  int gantt[1000];
+  int ganttLength = 0;
+
+  initQueue(&readyQueue, count);
+  //while all any processes are not terminated, run selection logic
+  while(allTerminated(processes, count) == 0){
+    for(int i = 0; i < count; i++){
+      if(processes[i].state == NEW && processes[i].arrivalTime == time){
+        processes[i].state = READY;
+        giveQueue(&readyQueue, i);
+      }
+    }
+    //if something is in ready queue and CPU is idle, look for new process
+    if(isEmpty(&readyQueue) == 0 && runningIndex == -1){
+      intBestQueuePos = 0;
+      int bestProcessIndex = getAt(&readyQueue, 0);
+      int bestRemainingTime = processes[bestProcessIndex].remainingTime;
+      //searching for shortest remaining time
+      for(int i = 1; i < readyQueue.size; i++){
+        int processIndex = getAt(&readyQueue, i);
+        int currentRemainingTime = processes[processIndex].remainingTime;
+        //if current elements remaining time is shorter, assign it as best fit
+        if(currentRemainingTime < bestRemainingTime){ 
+          bestRemainingTime = currentRemainingTime;
+          bestQueuePos = i;
+        }
+      }
+      runningIndex = takeAt(&readyQueue, bestQueuePos);
+      processes[runningIndex].state = RUNNING;
+      //if first run, set start time
+      if(processes[runningIndex].startTime == -1){
+        processes[runningIndex].startTime = time;
+      }
+    }
+    //if a process is running, decrement its remaining time
+    if(runningIndex != -1){
+      processes[runningIndex].remainingTime--;
+    }
+    //Record each step in an array for gantt chart
+    gantt[ganttLength] = runningIndex;
+    ganttLength++;
+    //write time step to output file
+    printTimeStep(outFile, time, processes, runningIndex, &readyQueue);
+    //update processes data if execution is completed
+    if(runningIndex != -1 && processes[runningIndex].remainingTime <= 0){
+      processes[runningIndex].completionTime = time + 1;
+      processes[runningIndex].state = TERMINATED;
+      runningIndex = -1;
+    }
+    //update current time step
+    time++;
+  }
+  //print gantt chart once all processes terminated
+  printGanttChart(outFile, processes, gantt, ganttLength);
+  freeQueue(&readyQueue);
+}
+
 
 
 
