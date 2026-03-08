@@ -34,9 +34,14 @@ int main(void){
 
   ///// FCFS /////
   copyProcesses(workingProcesses, originalProcesses, count);
-  
   outFile = fopen("output_fcfs.txt", "w");
   runFCFS(outFile, workingProcesses, count);
+  fclose(outFile);
+
+  ///// Priority /////
+  copyProcesses(workingProcesses, originalProcesses, count);
+  outFile = fopen("output_priority.txt", "w");
+  runPriority(outFile, workingProcesses, count);
   fclose(outFile);
 
   
