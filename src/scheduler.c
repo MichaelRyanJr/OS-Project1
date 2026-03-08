@@ -13,7 +13,7 @@ int allTerminated(PCB processes[], int count){
 
 
 void printTimeStep(FILE *outFile, int time, PCB processes[], int runningIndex, Queue *readyQueue){
-  fprintf(outFile, "Time %d:\n", time);
+  fprintf(outFile, "\nTime %d:\n", time);
 
   //if runningIndex == -1, CPU idle
   if(runningIndex == -1){
