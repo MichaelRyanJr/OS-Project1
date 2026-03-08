@@ -123,6 +123,10 @@ void runPriority(FILE *outFile, PCB processes[], int count){
 
     //if CPU not running and readyQueue is not empty, execute next process according to highest priority(1 = Highest Priority)
     if(isEmpty(&readyQueue) == 0 && runningIndex == -1){
+      int bestQueuePos = 0;
+      int bestProcessIndex = getAt(&readyQueue, 0);
+      int bestPriority = processes[bestProcessIndex].priority;
+      
       for(int i = 1; i < readyQueue.size; i++){
         int processIndex = getAt(&readyQueue, i);
         int currentPriority = processes[processIndex].priority;
