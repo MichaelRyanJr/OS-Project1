@@ -44,6 +44,11 @@ int main(void){
   runPriority(outFile, workingProcesses, count);
   fclose(outFile);
 
+  ///// SRTF /////
+  copyProcesses(workingProcesses, originalProcesses, count);
+  outFile = fopen("output_srtf.txt", "w");
+  runSRTF(outFile, workingProcesses, count);
+  fclose(outFile);
   
   return 0;
 }
