@@ -1,11 +1,19 @@
 #include <stdio.h>
 #include "pcb.h"
 
+//Copies processes array
+void copyProcesses(PCB dest[], PCB src[], int count){
+  for(int i = 0; i < count; i++){
+    dest[i] = src[i];
+  }
+}
+
 int main(void){
   FILE *inFile;
   FILE *outFile;
 
-  PCB processes[100];
+  PCB originalProcesses[100];
+  PCB workingProcesses[100];
   int count = 0;
 
   char header[100];
@@ -18,18 +26,18 @@ int main(void){
 
   fgets(header, sizeof(header), inFile);
   while(fscanf(inFile, "%s %d %d %d", pid, &arrival, &burst, &priority) == 4){
-    initPCB(&processes[count], pid, arrival, burst, priority);
+    initPCB(&originalProcesses[count], pid, arrival, burst, priority);
     count++;
   }
   fclose(inFile);
 
-  outFile = fopen("output_test.txt", "w");
-
-  fprintf(outFile, "Test of printPCB():\n");
-  for(int i = 0; i < count; i++){
-    printPCB(outFile, &processes[i]);
-  }
+  ///// FCFS /////
+  copyProcesses(workingProcesses, originalProcesses, count);
+  
+  outFile = fopen("output_fcfs.txt", "w");
+  runFCFS(outFile, workinProcesses, count);
   fclose(outFile);
 
+  
   return 0;
 }
