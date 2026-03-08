@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "pcb.h"
+#include "scheduler.h"
 
 //Copies processes array
 void copyProcesses(PCB dest[], PCB src[], int count){
@@ -35,7 +36,7 @@ int main(void){
   copyProcesses(workingProcesses, originalProcesses, count);
   
   outFile = fopen("output_fcfs.txt", "w");
-  runFCFS(outFile, workinProcesses, count);
+  runFCFS(outFile, workingProcesses, count);
   fclose(outFile);
 
   
