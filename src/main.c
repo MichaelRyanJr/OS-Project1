@@ -49,6 +49,12 @@ int main(void){
   outFile = fopen("output_srtf.txt", "w");
   runSRTF(outFile, workingProcesses, count);
   fclose(outFile);
+
+  ///// RR /////
+  copyProcesses(workingProcesses, originalProcesses, count);
+  outFile = fopen("output_rr.txt", "w");
+  runRR(outFile, workingProcesses, count);
+  fclose(outFile);
   
   return 0;
 }
