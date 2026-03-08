@@ -261,5 +261,68 @@ void runSRTF(FILE *outFile, PCB processes[], int count){
 }
 
 
+void runRR(FILE *outFile, PCB processes[], int count){
+  Queue readyQueue;
+  int time = 0;
+  int runningIndex = -1; //-1 indicates idle
+  int gantt[1000];
+  int ganttLength = 0;
+  int q = 0; //when q=2, shift next process in
 
+  initQueue(&readyQueue, count);
+  //while all any processes are not terminated, run selection logic
+  while(allTerminated(processes, count) == 0){
+    //load all processes into readyQueue
+    for(int i = 0; i < count; i++){
+      if(processes[i].state == NEW && processes[i].arrivalTime == time){
+        processes[i].state = READY;
+        giveQueue(&readyQueue, i);
+      }
+    }
+
+    //if CPU not running and readyQueue is not empty, execute next process in queue (non-preemtive)
+    if(isEmpty(&readyQueue) == 0 && runningIndex == -1){
+      runningIndex = takeQueue(&readyQueue);
+      processes[runningIndex].state = RUNNING;
+
+      if(processes[runningIndex].startTime == -1){
+        processes[runningIndex].startTime = time;
+      }
+      q = 0; //reset quantum for next process
+    }
+    //if queue is not empty and q = 2 and there is something in readyQueue, then swap current process for next process in queue (preemtive logic)
+    if(isEmpty(&readyQueue) == 0 && runningIndex != -1 && q == 2){
+      processes[runningIndex].state = READY;
+      giveQueue(&readyQueue, runningIndex);
+      runningIndex = takeQueue(&readyQueue);
+      processes[runningIndex].state = RUNNING;
+      //check if this is processes firt time running and update accordinly
+      if(processes[runningIndex].startTime == -1){
+        processes[runningIndex].startTime = time;
+      }
+      q = 0; //reset quantum
+    }
+    
+    if(runningIndex != -1){
+      processes[runningIndex].remainingTime--;
+      q++; //increment q only if something is running
+    }
+    //Record for gantt chart
+    gantt[ganttLength] = runningIndex;
+    ganttLength++;
+
+    printTimeStep(outFile, time, processes, runningIndex, &readyQueue);
+    //update process info if done
+    if(runningIndex != -1 && processes[runningIndex].remainingTime <= 0){
+      processes[runningIndex].completionTime = time + 1;
+      processes[runningIndex].state = TERMINATED;
+      runningIndex = -1;
+      q = 0; //reset q upon process completion
+    }
+    time++;
+  }
+
+  printGanttChart(outFile, processes, gantt, ganttLength);
+  freeQueue(&readyQueue);
+}
 
