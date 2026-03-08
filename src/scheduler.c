@@ -211,7 +211,7 @@ void runSRTF(FILE *outFile, PCB processes[], int count){
       int runningRemainingTime = processes[runningIndex].remainingTime;
       int queueSRTIndex = 0;
       int processIndex = getAt(&readyQueue, 0);
-      int queueSRT = processes[queueSRTProcessIndex].remainingTime;
+      int queueSRT = processes[processIndex].remainingTime;
       int currentRemainingTime;
       //check current RT against the rest
       for(int i = 1; i < readyQueue.size; i++){
