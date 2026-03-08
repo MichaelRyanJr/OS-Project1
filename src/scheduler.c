@@ -100,7 +100,65 @@ void runFCFS(FILE *outFile, PCB processes[], int count){
   }
 
   printGanttChart(outFile, processes, gantt, ganttLength);
-  
+  freeQueue(&readyQueue);
+}
+
+
+void runPriority(FILE *outFile, PCB processes[], int count){
+  Queue readyQueue;
+  int time = 0;
+  int runningIndex = -1; //-1 indicates idle
+  int gantt[1000];
+  int ganttLength = 0;
+
+  initQueue(&readyQueue, count);
+
+  while(allTerminated(processes, count) == 0){
+    for(int i = 0; i < count; i++){
+      if(processes[i].state == NEW && processes[i].arrivalTime == time){
+        processes[i].state = READY;
+        giveQueue(&readyQueue, i);
+      }
+    }
+
+    //if CPU not running and readyQueue is not empty, execute next process according to highest priority(1 = Highest Priority)
+    if(isEmpty(&readyQueue) == 0 && runningIndex == -1){
+      int processIndex = getAt(&readyQueue, i);
+      int currentPriority = processes[processIndex].priority;
+      //finding index of highest priority in readyQueue
+      if(currentPriority < bestPriority){
+        bestPriority = currentPriority;
+        bestQueuePos = i;
+      }
+      
+      runningIndex = takeAt(&readyQueue, bestQueuePos); //converting Queue index of best priority to processes index
+      processes[runningIndex].state = RUNNING;
+      
+      if(processes[runningIndex].startTime == -1){
+        processes[runningIndex].startTime = time;
+      }
+    }
+     //decrease runningTime if there is a running process
+    if(runningIndex != -1){
+      processes[runningIndex].remainingTime--;
+    }
+
+    //Record running processes for gantt chart
+    gantt[ganttLength] = runningIndex;
+    ganttLength++;
+    
+    printTimeStep(outFile, time, processes, runningIndex, &readyQueue);
+    //update process data if process has finished execution
+    if(runningIndex != -1 && processes[runningIndex].remainingTime <= 0){
+      processes[runningIndex].completionTime = time + 1;
+      processes[runningIndex].state = TERMINATED;
+      runningIndex = -1;
+    }
+    //increment time before next loop
+    time++;
+  }
+
+  printGanttChart(outFile, processes, gantt, ganttLength);
   freeQueue(&readyQueue);
 }
 
