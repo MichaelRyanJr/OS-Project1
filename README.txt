@@ -2,7 +2,7 @@
 CPU Scheduling Algorithm Simulator
 
 To compile & run:
-1) gcc src/main.cpp src/pcb.cpp src/queue.cpp src/scheduler.cpp -o scheduler
+1) g++ src/main.cpp src/pcb.cpp src/queue.cpp src/scheduler.cpp -o scheduler
 2) ./scheduler
 Note: Uses gcc as an alternative to g++, I realized that you specified g++ after I completed the assignment (not gcc like I initially thought I read since thats the only compilation tool ive used on the linux server)
 
