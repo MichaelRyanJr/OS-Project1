@@ -4,7 +4,7 @@ CPU Scheduling Algorithm Simulator
 To compile & run:
 1) g++ src/main.cpp src/pcb.cpp src/queue.cpp src/scheduler.cpp -o scheduler
 2) ./scheduler
-Note: Uses gcc as an alternative to g++, I realized that you specified g++ after I completed the assignment (not gcc like I initially thought I read since thats the only compilation tool ive used on the linux server)
+Note: This was originally coded in C not C++ which is why it looks more like C, luckily the port took minimal effort to accomplish as there were only two sets of errors and both related to memory allocation in queue.cpp
 
 Assumptions:
 1) pid array can only store 20 elements, assumption is that any examples wont contain more than 20  processes
