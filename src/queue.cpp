@@ -3,15 +3,15 @@
 #include <stdlib.h>
 
 void initQueue(Queue *q, int capacity){
-  q->data = malloc(capacity * sizeof(int));
+  q->data = new int[capacity];
   q->size = 0;
   q->capacity = capacity;
 }
 
 
 void freeQueue(Queue *q){
-  free(q->data);
-  q->data = NULL;
+  delete[] q->data;
+  q->data = nullptr;
   q->size = 0;
   q->capacity = 0;
 }
