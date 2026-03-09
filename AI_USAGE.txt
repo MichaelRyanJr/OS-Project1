@@ -4,6 +4,6 @@ Running List of AI Uses:
 3) To brush up on memory allocation and standard practices
 4) Refresher on how to open files, write/read from or to them, and closing them
 5) How to compile and execute programs with githubs codespace tool so I dont have to go back and forth between my IDE and github to test as well as how to push updates for the output files from this tool
-6) After the dealine extension I figured I would convert the code from C -> C++, since ive never done anything like this I consulted AI to determine what the best practices are for doing this, basically just told me to change files to .cpp and compile, fixing the errors as they appear.
+6) After the dealine extension I figured I would convert the code from C -> C++, since ive never done anything like this I consulted AI to determine what the best practices are for doing this, basically just told me to change files to .cpp and compile, fixing the errors as they appear. Luckily the only errors we from queue.cpp needed a few changes in relation to memory allocation
 
 Note: when asking AI how to use functions I made sure the example used was abstract and not related to the project itself
